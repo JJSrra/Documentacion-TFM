@@ -1,0 +1,41 @@
+\chapter{Nuevas propuestas aportadas al estudio}
+
+En este capítulo se realizará un análisis sobre los distintos métodos ideados para competir contra el sistema de recomendación del estado del arte que se ha escogido como referencia. La idea es proponer una serie de alternativas que puedan resultar interesantes y que se espera que mejoren la eficacia de dicho método.
+
+Como se ha mencionado en el capítulo anterior, el principal criterio que se ha seguido para escoger el método del estado del arte es, aparte de la intrínseca necesidad de tratarse de un algoritmo actual, que reproduzca en su algoritmo un comportamiento social que se asemeje a la toma de decisiones que realizan los seres humanos a la hora de enfrentarse a un problema así. En el caso del sistema de recomendación de referencia, su algoritmo se basa en decidir qué usuario es más representativo para el grupo en función de la lista de preferencias que tiene cada miembro. Para los métodos propios de este estudio se han planteado las siguientes propuestas:
+
+\begin{itemize}
+	\item \textbf{Método de empatía}
+	\item \textbf{Método del más cinéfilo}
+	\item \textbf{Método del más optimista}
+	\item \textbf{Método de mayor similitud}
+\end{itemize}
+
+A lo largo de las próximas páginas se realizará un análisis más detallado acerca de cada uno de estos métodos, así como de dónde ha surgido la idea de cada uno y cómo puede asemejarse a un comportamiento social. Además se explicará su funcionamiento mediante pseudocódigo acompañado de una descripción del mismo en lenguaje natural.
+
+\section{Método de empatía}
+
+La idea para esta primera propuesta surgió desde el inicio del estudio, ya que fue un factor que no se identificó en prácticamente ningún sistema de recomendación a grupos del estado del arte. En el recomendador \textit{HappyMovie} \cite{happymovie2011} aparecía el concepto de \textit{fairness}, algo así como la ``justicia'' a la hora de realizar recomendaciones al grupo. Sin embargo, en dicha publicación no se hace referencia al método que utilizan para medir, estimar y recalcular el valor de \textit{fairness} a lo largo del tiempo. Dada la naturaleza del concepto, este valor tiene necesariamente que ser dinámico y actualizarse en función de lo que haya ocurrido en iteraciones pasadas. En este punto se decidió que una de las nuevas propuestas del estudio fuera \textbf{un sistema de recomendación a grupos capaz de ser empático} con todos los miembros del mismo.
+
+La premisa para este algoritmo es sencilla, pero lógica: dar más importancia a las preferencias de aquellos usuarios a los que menos les hayan gustado las últimas películas recomendadas. A un usuario al que no le hayan gustado nada las últimas tres películas recomendadas se le tendrá muy en cuenta a la hora de decidir la siguiente, de la misma manera que a una persona a la que le han maravillado esas mismas películas no le importará que la siguiente le guste un poco menos.
+
+Si se habla de un grupo de amigos que van a ver una película, este algoritmo tiene especial sentido, ya que se entiende que todos los miembros buscan el interés general del grupo además de su propio beneficio. Estar dispuesto a hacer concesiones, o ``sacrificar'' una elección óptima para que otra parte del grupo obtenga una opción mejor hace que el grupo se equilibre y puede dar lugar a una recomendación interesante desde el punto de vista algorítmico -- a través de la experimentación se dictaminará si también lo es desde el punto de vista de la eficacia.
+
+A continuación se muestra un fragmento de pseudocódigo que representa el método de recomendación basado en empatía:
+
+\begin{algorithm}
+	\caption{Método de empatía}
+	\begin{algorithmic}[1]
+		\State $valoraciones \gets predecirValoraciones()$
+		\State $pesos \gets inicializarPesos()$
+		\State $ranking \gets []$
+		\While{\textit{size(películas)} \textbf{$> 1$}}
+		\State $valoracionesPonderadas \gets valoraciones \times pesos$
+		\State \textit{películaRecomendada} $ \gets max(valoracionesPonderadas)$
+		\State $pesos \gets actualizarPesos()$
+		\State \textbf{Eliminar} \textit{películaRecomendada} \textbf{de} \textit{valoraciones} \textbf{y} \textit{películas}
+		\State \textbf{Añadir} \textit{películaRecomendada} \textbf{a} \textit{ranking}
+		\EndWhile
+		\State{\textbf{return} \textit{ranking}}
+	\end{algorithmic}
+\end{algorithm}
