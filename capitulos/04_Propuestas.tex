@@ -22,12 +22,15 @@ La premisa para este algoritmo es sencilla, pero lógica: dar más importancia a
 Si se habla de un grupo de amigos que van a ver una película, este algoritmo tiene especial sentido, ya que se entiende que todos los miembros buscan el interés general del grupo además de su propio beneficio. Estar dispuesto a hacer concesiones, o ``sacrificar'' una elección óptima para que otra parte del grupo obtenga una opción mejor hace que el grupo se equilibre y puede dar lugar a una recomendación interesante desde el punto de vista algorítmico -- a través de la experimentación se dictaminará si también lo es desde el punto de vista de la eficacia.
 
 A continuación se muestra un fragmento de pseudocódigo que representa el método de recomendación basado en empatía:
+\newpage
 
 \begin{algorithm}
 	\caption{Método de empatía}
 	\begin{algorithmic}[1]
 		\State $valoraciones \gets predecirValoraciones()$
-		\State $pesos \gets inicializarPesos()$
+		\For{\textit{usuario} \textbf{in} \textit{grupo}}
+		\State \textbf{Añadir} $\frac{1}{size(grupo)}$ \textbf{a} \textit{pesos}
+		\EndFor
 		\State $ranking \gets []$
 		\While{\textit{size(películas)} \textbf{$> 1$}}
 		\State $valoracionesPonderadas \gets valoraciones \times pesos$
@@ -39,3 +42,20 @@ A continuación se muestra un fragmento de pseudocódigo que representa el méto
 		\State{\textbf{return} \textit{ranking}}
 	\end{algorithmic}
 \end{algorithm}
+
+\begin{algorithm}
+	\caption{Actualización de pesos}
+	\begin{algorithmic}[1]
+		\State \textit{ordenSatisfacción} $\gets$ \textbf{Ordenar} \textit{valoraciones[películaRecomendada]}
+		\State \textit{rango} $\gets 0.2$
+		\State \textit{paso} $\gets \frac{rango}{size(grupo) - 1}$
+		\For{\textit{posición} \textbf{in} \textit{ordenSatisfacción}}
+		\State \textit{pesos[posición]} $\gets -\frac{rango}{2} + paso \times $\textit{posición}
+		\EndFor
+		\State \textbf{return} \textit{pesos}
+	\end{algorithmic}
+\end{algorithm}
+
+En el pseudocódigo se pueden observar dos algoritmos distinguidos: el primero representa el grueso del método, con todo el proceso del sistema de recomendación y que devuelve el ranking final; el segundo es el algoritmo que actualiza los pesos para cada miembro del grupo en función de cuánto les ha gustado la película.
+
+En primer lugar, se analizará el algoritmo general del sistema de recomendación.
