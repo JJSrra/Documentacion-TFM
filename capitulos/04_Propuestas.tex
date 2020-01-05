@@ -39,6 +39,7 @@ A continuación se muestra un fragmento de pseudocódigo que representa el méto
 		\State \textbf{Eliminar} \textit{películaRecomendada} \textbf{de} \textit{valoraciones} \textbf{y} \textit{películas}
 		\State \textbf{Añadir} \textit{películaRecomendada} \textbf{a} \textit{ranking}
 		\EndWhile
+		\State \textbf{Añadir última} \textit{película} \textbf{a} \textit{ranking}
 		\State{\textbf{return} \textit{ranking}}
 	\end{algorithmic}
 \end{algorithm}
@@ -46,9 +47,9 @@ A continuación se muestra un fragmento de pseudocódigo que representa el méto
 \begin{algorithm}
 	\caption{Actualización de pesos}
 	\begin{algorithmic}[1]
-		\State \textit{ordenSatisfacción} $\gets$ \textbf{Ordenar} \textit{valoraciones[películaRecomendada]}
 		\State \textit{rango} $\gets 0.2$
 		\State \textit{paso} $\gets \frac{rango}{size(grupo) - 1}$
+		\State \textit{ordenSatisfacción} $\gets$ \textbf{Ordenar} \textit{valoraciones[películaRecomendada]}
 		\For{\textit{posición} \textbf{in} \textit{ordenSatisfacción}}
 		\State \textit{pesos[posición]} $\gets -\frac{rango}{2} + paso \times $\textit{posición}
 		\EndFor
@@ -56,6 +57,24 @@ A continuación se muestra un fragmento de pseudocódigo que representa el méto
 	\end{algorithmic}
 \end{algorithm}
 
-En el pseudocódigo se pueden observar dos algoritmos distinguidos: el primero representa el grueso del método, con todo el proceso del sistema de recomendación y que devuelve el ranking final; el segundo es el algoritmo que actualiza los pesos para cada miembro del grupo en función de cuánto les ha gustado la película.
+En el pseudocódigo se pueden observar dos algoritmos distinguidos: el primero representa el grueso del método, con todo el proceso del sistema de recomendación y que devuelve el ranking final; el segundo es el algoritmo que actualiza los pesos para cada miembro del grupo en función de cuánto les ha gustado la película. En las siguientes líneas se entenderán qué son estos pesos y cómo afectan al criterio de selección diseñado.
 
-En primer lugar, se analizará el algoritmo general del sistema de recomendación.
+En primer lugar, se analizará el algoritmo general del sistema de recomendación. Este método tiene una clara diferencia que destaca sobre el algoritmo del estado del arte, y es la presencia de \textbf{pesos} que ponderan la relevancia de cada miembro del grupo, entendiendo por relevancia lo mucho que puede influir un miembro en la toma de una decisión determinada en el transcurso de la construcción del ranking final. Es decir, estos pesos tienen que ser \textbf{dinámicos} para adaptarse a las circunstancias que se vayan aprendiendo de las iteraciones anteriores.
+
+La inicialización de valores que se da al comienzo del algoritmo conlleva la creación de un vector de pesos que, por el momento, debe valorar a todos los usuarios por igual. Se entiende que se parte desde un punto base en el que ningún usuario está más satisfecho que otro, por lo tanto todos tienen la misma importancia a la hora de tomar una decisión sobre qué película deben escoger. Para lograr esta funcionalidad, a cada usuario de un grupo $G$ debe serle asignado un valor equivalente a $\frac{1}{|G|}$, siendo $|G|$ la cardinalidad de dicho grupo, y así conseguir que todos aporten el mismo porcentaje a la decisión final.
+
+Para poder comenzar a recomendar cualquier película a un grupo, es necesario que se cuente con una estimación de lo que cada miembro va a valorar dicha película. Esto se consigue mediante \textbf{predicción} -- el método utilizado para ello se explicará en detalle en el apartado correspondiente a experimentación, dado que se puede sustituir fácilmente en función del estudio que se quiera realizar, y qué algoritmo se elija para predecir estas valoraciones no implica cambio alguno en cuanto a cómo se desarrolla el método.
+
+Con la matriz de valoraciones obtenida (películas x miembros del grupo) y los pesos inicializados, se comienza un bucle del que obtener en cada iteración la película seleccionada para ser incluida en el ranking. Para ello, lo primero que hay que hacer es computar los pesos para cada usuario, dándoles a la valoración de cada uno un coeficiente de modificación que se corresponda a la importancia que han de tener en la decisión pertinente. Una vez obtenidas las valoraciones ponderadas, sumando dichas valoraciones para cada película se calcula cuál obtiene un resultado mayor, y por tanto \textbf{es la película recomendada}. El último paso de este bucle es añadir la película al ranking final (por supuesto, ordenado), eliminarla de la lista de películas y de la matriz de valoraciones, y \textbf{recalcular los pesos} asignados a cada usuario.
+
+Al tratarse de un método un poco más complejo, se ha decidido separar este algoritmo del pseudocódigo del sistema de recomendación, y en cierto modo también realizar un paréntesis en la explicación del mismo para analizar cómo se actualizan los pesos de los usuarios en este método en particular. Como se ha indicado anteriormente, la funcionalidad principal que se persigue con este método es que los usuarios queden \textbf{satisfechos de forma empática}, es decir, se busca propiciar que los usuarios que no han visto películas que les gustan tengan más voz a la hora de escoger la siguiente. En este algoritmo se implementa una funcionalidad similar a la del algoritmo AdaBoost \cite{adaboost}, disminuyendo el peso de los miembros del grupo satisfechos y aumentando el de aquellos a los que la película les gusta menos. En este caso, los valores no pueden aumentar por encima de 1 y no pueden disminuir por debajo de 0 -- esto tiene especial sentido viéndolo desde el punto de vista del lenguaje natural como que nunca se debe ``fastidiar'' a un miembro del grupo por equilibrar la balanza, es decir, no se quiere dar una influencia negativa a tal usuario. Como mucho, si se da el caso de que dicho usuario está encantado con todas las películas, puede acabar con peso 0 significando esto que no tomará parte en la decisión de la próxima película.
+
+El algoritmo de actualización de pesos empático funciona de la siguiente manera. En primer lugar se ha de fijar un valor para el rango de modificación de los pesos, que englobe por encima y por debajo del 0. En este caso se ha escogido el valor de rango $0.2$ tras una serie de pruebas manuales previas al experimento. Este rango provoca que la fluctuación de pesos pueda ir desde un $-0.1$ hasta un $+0.1$. Como la idea es que los miembros se distribuyan en ese espacio, se ha de calcular un \textit{paso} que especifique el escalón que ha de darse entre cada usuario.
+
+Por ejemplo, para poder dar cabida a los 5 usuarios de un grupo G debe existir un paso equivalente a $\frac{r}{|G|-1}$, siendo $r$ el rango previamente definido y $|G|$ la cardinalidad del grupo. De esta forma, el valor del paso sería $p = 0.05$ y los usuarios se distribuirán con los valores $\{-0.1, -0.05, 0, 0.05, 0.1\}$ en función de su satisfacción con la película seleccionada.
+
+A continuación se calcula, en función de la \textbf{valoración original} predicha para cada usuario, no de la valoración ponderada obtenida de multiplicar la predicción por los pesos, el orden de satisfacción de los usuarios con dicha película. Este orden será el que indique qué fluctuación de pesos se le otorga a los usuarios, y así el que más satisfecho haya quedado tendrá un 10\% menos de influencia en la siguiente película, así como el que menos haya quedado tendrá un 10\% más.
+
+Por último, como se ha especificado anteriormente, es necesario limitar los valores obtenidos tras la fluctuación al rango $[0,1]$ para que la recomendación tenga sentido desde el punto de vista social en todo momento, que en última instancia es lo que se busca con este experimento; no solo obtener un resultado eficaz, sino comprobar cómo es capaz de comportarse un algoritmo que actúe de manera similar a como lo haría un ser humano.
+
+Una vez entendido cómo funciona la actualización de pesos para el método de empatía, solo queda repetir el bucle hasta que todas las películas hayan sido clasificadas y ordenadas, y devolver el ranking correspondiente. De acuerdo al propósito del método, dicho ranking habrá tenido en cuenta mantener, a lo largo de todas las decisiones, un equilibrio que intente causar la mayor satisfacción global, pero sobre todo que logre que ningún usuario se sienta maltratado por el sistema.
