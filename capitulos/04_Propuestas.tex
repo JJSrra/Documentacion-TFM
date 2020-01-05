@@ -129,3 +129,57 @@ De nuevo, en este algoritmo hay que predecir las valoraciones de las películas 
 Con las valoraciones adecuadamente predichas y posteriormente ponderadas, se produce un bucle que terminará cuando no queden películas. En este bucle se calcula en cada iteración cuál es la película que más puntuación recibe, obteniendo dicho dato de la suma de dichas valoraciones ponderadas. Cabe recordar que estas valoraciones ya contienen la información de quiénes son los usuarios más cinéfilos y qué películas les gustan más, con lo cual se puede tratar la matriz con relativa sencillez, sin hacer mayor cálculo. Simplemente cuando se obtenga la película seleccionada, hay que eliminarla de la matriz para que no vuelva a ser escogida, así como de la lista de películas disponibles para el grupo. Esta película se incluye en el ranking de películas a recomendar.
 
 Cuando todas las películas hayan sido incluidas por orden en el ranking, este se puede devolver como resultado final. Este ranking deberá tener en sus primeras posiciones, como característica descriptiva, una serie de películas que se consideren ``objetivamente buenas'' por las críticas, ya que la opinión de los usuarios expertos influirá mucho en la toma de decisiones. Por supuesto, esto vendrá determinado por el nivel de experiencia de los miembros del grupo, y esta característica no tiene por qué darse si no se trata con un grupo con suficiente nivel, por lo que es algo a tener en cuenta a la hora de usar este método en un problema real.
+
+\section{Método del más optimista}
+
+En este método se plantea una hipótesis consistente en que un usuario que valora más positivamente las películas será más propicio a disfrutarlas y a recomendar películas que sean de gusto e interés general. Si bien en algunos casos un usuario de estas características pudiera ser tachado de influenciable y poco crítico, el planteamiento que se le ha dado a este método parte de la premisa de que siempre será mejor contar con un exceso de positivismo que con una lacra del mismo. Asemejándolo al panorama social que se ha comentado en los apartados anteriores, un miembro del grupo de carácter entusiasta que valore positivamente la mayoría de las películas que ve puede transmitir al grupo una sensación de satisfacción general, mientras que una persona excesivamente crítica y al que no le convenza nada de lo que están viendo puede rápidamente minar la moral del grupo con sus valoraciones negativas.
+
+De nuevo se le ha añadido un componente de pesos que definen cómo de optimista es un miembro del grupo con respecto al resto. De la misma forma que ocurría con los pesos del método del más cinéfilo, se calcularán en función de las valoraciones que dejen los usuarios del grupo, y no se tratará con valores absolutos a fin de adaptar el método a todos los casos posibles.
+
+A continuación se puede apreciar un fragmento de pseudocódigo que representa el algoritmo en cuestión:
+\newpage
+
+\begin{algorithm}
+	\caption{Método del más optimista}
+	\begin{algorithmic}[1]
+		\State $valoraciones \gets predecirValoraciones()$
+		\State $pesos \gets $ \textit{obtenerPesosOptimistas()}
+		\State $ranking \gets []$
+		\State $valoraciones \gets valoraciones \times pesos$
+		\While{\textit{size(películas)} \textbf{$> 1$}}
+		\State \textit{películaRecomendada} $ \gets max(valoraciones)$
+		\State \textbf{Eliminar} \textit{películaRecomendada} \textbf{de} \textit{valoraciones} \textbf{y} \textit{películas}
+		\State \textbf{Añadir} \textit{películaRecomendada} \textbf{a} \textit{ranking}
+		\EndWhile
+		\State \textbf{Añadir última} \textit{película} \textbf{a} \textit{ranking}
+		\State{\textbf{return} \textit{ranking}}
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+	\caption{Obtención de pesos para el método del más optimista}
+	\begin{algorithmic}[1]
+		\For{\textit{usuario} \textbf{in} \textbf{grupo}}
+		\State \textit{mediaValoraciones[usuario]} $\gets$ \textit{mean(valoraciones[usuario])} 
+		\EndFor
+		\State \textit{totalMediaValoraciones} $\gets$ \textit{sum(mediaValoraciones)}
+		\For{\textit{usuario} \textbf{in} \textit{mediaValoraciones}}
+		\State \textit{pesos[usuario]} $\gets \frac{\textit{mediaValoraciones[usuario]}}{\textit{totalMediaValoraciones}}$
+		\EndFor
+		\State \textbf{return} \textit{pesos}
+	\end{algorithmic}
+\end{algorithm}
+
+Como en casos anteriores aparece el pseudocódigo general del algoritmo separado del cálculo de los pesos para distinguir y hacer más legibles ambos fragmentos. De nuevo aquí se pueden calcular los pesos una única vez al inicio del proceso ya que no van a variar en mitad de la ejecución del algoritmo, sino basándose en las valoraciones dadas a priori.
+
+Estas valoraciones tienen que ser extraídas también del conjunto de entrenamiento, las valoraciones del conjunto de test no tienen cabida en este momento dado que son las que se quieren predecir y se deben omitir para que no sesguen el algoritmo. En este caso lo que se busca obtener es la valoración media que los usuarios dan a las películas que ven, y a raíz de eso comprobar cómo de optimistas son respecto al cine.
+
+Al tratar únicamente con los datos de los miembros del grupo se pueden calcular los pesos de cada usuario en relación al resto de miembros. No existe una escala predefinida que determine que si un usuario valora por encima de una cantidad \textit{X} va a ser considerado optimista y si está por debajo pesimista, sino que lo que es considerado optimista vendrá dado por las características de los usuarios que componen el grupo.
+
+Para el cálculo de los pesos de este método se obtiene la valoración media entre todas las que ha dado cada usuario, y se suman, para obtener un total de valoraciones medias. De ese total, a cada usuario se le asigna como peso el porcentaje del total que corresponde a su valoración media, equilibrándose así de forma autónoma aquellos casos en los que haya mucha diferencia entre las valoraciones medias de los miembros del grupo, así como aquellos en los que los usuarios sean prácticamente similares, tanto si tienen valoraciones medias bajas o altas.
+
+Con las valoraciones obtenidas mediante el algoritmo de predicción que se explicará en el capítulo de experimentación, estas son multiplicadas por los pesos obtenidos en el paso anterior, dando lugar a la matriz de valoraciones ponderadas con la que se trabajará en el resto del proceso algorítmico. Una vez ponderadas, estas valoraciones ya tienen implícita la información acerca del optimismo o pesimismo de cada uno de los usuarios, por lo que se puede trabajar directamente con ellas.
+
+Llegado a este punto, el proceso de selección de película es similar al anterior, simplemente queda calcular la suma de las valoraciones ponderadas y así comprobar cuál es la que tiene mayor puntuación para el grupo constituido. La película elegida se incluye en el ranking de películas a recomendar al grupo, y es eliminada a su vez de la matriz y de la lista de películas disponibles, para que no pueda ser recomendada otra vez y no vuelva a aparecer en el ranking.
+
+Cuando se hayan seleccionado todas las películas, se habrá formado un ranking que se devuelve como respuesta del sistema de recomendación. El ranking que se obtiene de este método de recomendación propicia que se seleccionen películas que le hayan gustado a aquellas personas que mejor valoran en general, por lo que se puede esperar que la tónica general de las películas que copen las primeras posiciones de la lista sean películas de esta índole, al menos en cuanto a los usuarios más optimistas del grupo. Está claro que esto no implica que vayan a gustarle forzosamente al resto de miembros, pero sí que es una estrategia de recomendación interesante desde el punto de vista social -- y que a través de la experimentación se busca averiguar si también puede operar a un buen nivel de eficacia.
