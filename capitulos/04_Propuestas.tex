@@ -45,7 +45,7 @@ A continuación se muestra un fragmento de pseudocódigo que representa el méto
 \end{algorithm}
 
 \begin{algorithm}
-	\caption{Actualización de pesos}
+	\caption{Actualización de pesos para el método de empatía}
 	\begin{algorithmic}[1]
 		\State \textit{rango} $\gets 0.2$
 		\State \textit{paso} $\gets \frac{rango}{size(grupo) - 1}$
@@ -78,3 +78,4 @@ A continuación se calcula, en función de la \textbf{valoración original} pred
 Por último, como se ha especificado anteriormente, es necesario limitar los valores obtenidos tras la fluctuación al rango $[0,1]$ para que la recomendación tenga sentido desde el punto de vista social en todo momento, que en última instancia es lo que se busca con este experimento; no solo obtener un resultado eficaz, sino comprobar cómo es capaz de comportarse un algoritmo que actúe de manera similar a como lo haría un ser humano.
 
 Una vez entendido cómo funciona la actualización de pesos para el método de empatía, solo queda repetir el bucle hasta que todas las películas hayan sido clasificadas y ordenadas, y devolver el ranking correspondiente. De acuerdo al propósito del método, dicho ranking habrá tenido en cuenta mantener, a lo largo de todas las decisiones, un equilibrio que intente causar la mayor satisfacción global, pero sobre todo que logre que ningún usuario se sienta maltratado por el sistema.
+
