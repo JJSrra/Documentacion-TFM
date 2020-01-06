@@ -191,3 +191,29 @@ La última propuesta planteada difiere un poco de las anteriores, ya que en luga
 Utilizar pesos resulta una forma clara de otorgar balance al grupo dándole una influencia distinta a cada miembro basándose en los datos recopilados del conjunto de entrenamiento. Para este caso no son adaptables, puesto que se quiere buscar un único perfil de usuario, y para ello hay que encontrar otra forma de decidir qué determina que un usuario represente más al grupo. En el enfoque social que se le está dando a los métodos que componen este estudio, esta propuesta resulta quizá un poco más compleja de ubicar que las anteriores, así como pasaba con el algoritmo del estado del arte escogido.
 
 Se puede decir que en el supuesto de un grupo de amigos que van a ver una película juntos, sabiendo de sobra qué películas les gustan más y cuáles menos a cada uno de los componentes del mismo, esta propuesta trata de definir cómo el propio grupo conoce que, dadas las experiencias pasadas, las películas que más le gustan a un determinado miembro son las que más satisfecho dejan al resto. Esto puede deberse a mera casuística, o puede tener un sentido particular, como que a dicha persona le gusten las películas de un género específico o de un director en concreto.
+
+A continuación se muestra un fragmento de pseudocódigo que ilustra el funcionamiento del método de mayor similitud:
+
+\begin{algorithm}
+	\caption{Método de mayor similitud}
+	\begin{algorithmic}[1]
+		\State $valoraciones \gets predecirValoraciones()$
+		\State $matrizPearson \gets $ \textit{obtenerCorrelaciónPearson()}
+		\State $usuarioRepresentante \gets max(mean(matrizPearson[usuario]))$
+		\For{\textit{película} \textbf{in} \textit{películas}}
+		\State \textbf{Añadir} \textit{valoraciones[usuario][película]} \textbf{a} \textit{ranking}
+		\EndFor
+		\State \textbf{Ordenar} \textit{ranking} \textbf{decreciente}
+		\State \textbf{return} \textit{ranking}
+	\end{algorithmic}
+\end{algorithm}
+
+A diferencia de los otros métodos, en este no aparece el pseudocódigo del cálculo de pesos aparte, ya que no tiene cabida en este método. Y además, al tratarse de un caso menos extenso en cuanto a complejidad algorítmica se ha considerado mejor incluirlo todo en un único bloque de pseudocódigo.
+
+Lo primero como siempre es predecir las valoraciones individuales del conjunto de validación que se quieren evaluar durante el experimento. En el capítulo dedicado a la experimentación se hará referencia con todo detalle a cómo se han predicho estas valoraciones durante todo el estudio. Por ahora, simplemente cabe recordar que estas valoraciones no se pueden obtener del conjunto de validación sino que deben ser predichas a fin de que el algoritmo sea realmente funcional y aplicable a un problema de la vida real, y no tenga una opinión sesgada en base a dichas valoraciones.
+
+Lo que más destaca de este método es la utilización de la \textbf{matriz de correlación de Pearson}. Si bien más adelante en la experimentación se podrá observar cómo esta matriz de Pearson ha sido necesaria en pasos previos al experimento, de cara al pseudocódigo del algoritmo se debe tratar como si se construyese en este punto. En el capítulo de experimentación se analizará detalladamente cómo se construye esta matriz, pero por ahora lo importante es destacar que representa la correlación existente entre unos y otros usuarios. Y por tanto, el funcionamiento del algoritmo consiste en obtener aquel usuario cuyo coeficiente de Pearson (es decir, su correlación) medio con respecto al resto de miembros del grupo sea mayor. De esa persona se dirá que es el que más se parece a los intereses generales del grupo, y por ello será catalogado como el \textbf{usuario representante}.
+
+Este usuario es al que se le hará la recomendación, igual que ocurría en el método del estado del arte. Dicha recomendación, a pesar de que se hace a un único usuario y a las valoraciones predichas para él, queda como resultado del algoritmo y es el ranking global que el sistema de recomendación hace al grupo completo.
+
+Dado que se está utilizando la fórmula de la matriz de correlación de Pearson, en este caso se está implementando una forma de reconocer en base a lo ocurrido en el pasado qué usuario es más representativo del grupo, lo cual puede lograrse en el símil social mediante la experiencia en películas pasadas. No se trata de que un usuario determinado sea capaz de predecir con toda firmeza cuánto va a valorar la película, sino que otros miembros del grupo se sientan identificados con sus elecciones pasadas. Si se da un caso así, no sería de extrañar que una decisión del grupo fuera dejar escoger película a aquella persona que parece representar a la mayoría del grupo. En el capítulo de resultados se comprobará cómo de adecuada es esta propuesta en términos de eficacia.
