@@ -87,7 +87,7 @@ Existen multitud de métricas de evaluación de carácter general, pero para un 
 
 En un primer momento se pensó en utilizar el \textbf{Mean Absolute Error}, calculando la diferencia de posiciones entre el ranking predicho y el ranking real. Sin embargo esto presenta un problema grave, y es que se les da la misma importancia a que haya dos películas mal situadas en la cabeza de la clasificación o en la cola. Siempre debe tener mucha más importancia acertar con las primeras recomendaciones, por lo que estos primeros puestos deberían tener sustancialmente más influencia en la validación del ranking que los últimos.
 
-Para solventar este problema se ha utilizado finalmente como única métrica de evaluación la \textbf{Normalized Discounted Cummulative Gain}. Esta métrica computa la ``ganancia'' \textit{(gain)} del primer elemento de la lista y se va acumulando mientras continúa hacia posiciones inferiores. La ganancia calculada por cada elemento de la lista está graduada en función de lo alta que sea la posición en la que se encuentra, y por supuesto en función de lo acertada que sea con respecto al ranking real. Al tratarse además de la versión \textbf{normalizada} de la métrica, el resultado obtenido viene dado en el rango [0,1], siendo 1 un calco exacto del ranking real correspondiente
+Para solventar este problema se ha utilizado finalmente como única métrica de evaluación la \textbf{Normalized Discounted Cummulative Gain (nDCG)}. Esta métrica computa la ``ganancia'' \textit{(gain)} del primer elemento de la lista y se va acumulando mientras continúa hacia posiciones inferiores. La ganancia calculada por cada elemento de la lista está graduada en función de lo alta que sea la posición en la que se encuentra, y por supuesto en función de lo acertada que sea con respecto al ranking real. Al tratarse además de la versión \textbf{normalizada} de la métrica, el resultado obtenido viene dado en el rango [0,1], siendo 1 un calco exacto del ranking real correspondiente
 
 \section{Evaluación de los métodos del estudio}
 
@@ -104,3 +104,13 @@ El algoritmo que se ha utilizado como \textit{baseline} para el experimento ha s
 Una vez que se han obtenido estos rankings se pueden comparar con los resultados reales. Dado que el algoritmo \textit{baseline} permite obtener un ranking distinto dependiendo de cada estrategia, se puede evaluar directamente con el ranking real correspondiente a la misma, dando lugar a una comparativa directa donde se evalúa principalmente la eficacia del filtrado colaborativo.
 
 Como el resto de métodos del estudio (tanto la referencia del estado del arte como las nuevas propuestas) generan un único ranking en lugar de uno por cada estrategia de combinación, dicho ranking se somete a evaluación con respecto a cada uno de los rankings reales, dando una idea de cómo funcionaría cada método si la forma de combinar las valoraciones del grupo fuera cada una de las anteriormente planteadas.
+
+\section{Extracción de resultados}
+
+Como último paso de la experimentación, es imprescindible recopilar los resultados del mismo. A través de la evaluación, mediante la métrica \textbf{Normalized Discounted Cummulative Gain} se obtiene una puntuación que servirá para comparar la eficacia de los diferentes métodos. Además será interesante comparar sus puntuaciones no solamente en términos generales, sino dependiendo de la estrategia de combinación aplicada por el grupo.
+
+Tras obtener las puntuaciones que cada ranking predicho obtiene con respecto a los rankings reales, esta información se guarda en un fichero, por cada método y por cada tipo de grupos (aleatorios o de colegas), quedando en total \textbf{12 archivos de resultados} (6 métodos a evaluar por 2 archivos de resultados por método). Cada archivo, a su vez, contiene dentro los valores nDCG resultantes de comparar la predicción generada por el método y el ranking real correspondiente a cada estrategia -- en total, se obtienen 4 valores por cada uno de dichos archivos.
+
+La disposición escogida para el almacenamiento ordenado de estos datos permite disponer de ellos rápida y descriptivamente cuando se necesiten. De esta manera, construir las tablas o las gráficas necesarias para apoyar las conclusiones del estudio.
+
+
