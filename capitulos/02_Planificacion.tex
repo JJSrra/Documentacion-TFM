@@ -2,25 +2,29 @@
 
 En este capítulo se aborda el plan de trabajo a seguir para la realización de este estudio. En primar lugar se realizará la captación de requisitos necesarios para lograr el objetivo propuesto, y después se detallará la planificación del trabajo, con una estimación en costes tanto de trabajo como de materiales así como una distribución del tiempo entre tareas.
 
-\section{Requisitos de investigación}
+Al tratarse de un trabajo de investigación, no se puede realizar adecuadamente el análisis de requisitos habitual para un proyecto general de ingeniería. En su lugar, sin embargo, se plantean unas etapas diferentes que se deben cumplir para llevar a cabo un estudio de estas características.
 
-Al tratarse de un trabajo de investigación, no se puede realizar adecuadamente el análisis de requisitos habitual para un proyecto general de ingeniería. En su lugar, sin embargo, se plantean unos objetivos diferentes que se deben cumplir para llevar a cabo un estudio de estas características. En el caso de este estudio en particular, los requisitos que se pueden plantear son los siguientes:
+\section{Etapas de investigación}
+
+Las etapas del proceso de investigación de este estudio son las siguientes:
 
 \begin{enumerate}
 	\item{\textbf{Realizar una investigación inicial en torno a los sistemas de recomendación}: revisar la literatura buscando información acerca de estos sistemas, comprobar qué evolución han seguido a lo largo de los años y cómo se han llegado a desarrollar los sistemas de recomendación a grupos.}
 	\item{\textbf{Profundizar en el estado del arte del sistemas de recomendación a grupos}: investigar más a fondo en estos métodos que son en los que realmente se va a centrar el estudio. Obtener los sistemas más destacados del estado del arte.}
 	\item{\textbf{Seleccionar el algoritmo de referencia del estado del arte}: Entre todos los sistemas de recomendación a grupos que se hayan investigado en el paso anterior, decidir cuál es el que se ajusta mejor a los requerimientos del estudio y obtener toda la información necesaria para implementarlo.}
-	\item{\textbf{Diseñar el experimento}: crear los grupos para la experimentación e implementar un algoritmo \textit{baseline} que sirva como punto de referencia. Implementar las estrategias de agregación de soluciones a la hora de experimentar y comprobar su correcto funcionamiento con dicho algoritmo.}
+	\item{\textbf{Crear los grupos para el experimento}: decidir qué métodos se van a seguir para la división de usuarios en grupos y crearlos desde el primer momento de la experimentación para así trabajar siempre sobre los mismos.}
+	\item{\textbf{Implementar las estrategias de combinación}: seleccionar qué estrategias se van a utilizar en el estudio para combinar las valoraciones individuales de los miembros del grupo y así obtener una valoración grupal.}
 	\item{\textbf{Implementar el algoritmo del estado del arte}: implementar el método siguiendo los parámetros y estructura del experimento diseñado. Es necesario contar con el código de los algoritmos para el experimento, por lo que hay que implementar el del estado del arte si no se puede conseguir su código fuente.}
 	\item{\textbf{Diseñar las nuevas propuestas del estudio}: para el objetivo del estudio hay que plantear nuevas propuestas que puedan competir con el estado del arte. Para ello primero hay que valorar los campos que quedan por experimentar y proponer una serie de algoritmos que se ajusten al perfil buscado.}
 	\item{\textbf{Implementar las propuestas propias}: una vez decididas las propuestas que van a formar parte del experimento, se deben implementar del mismo modo que el algoritmo del estado del arte. Comprobar de nuevo que toda la funcionalidad del experimento es válida con la nueva implementación.}
-	\item{\textbf{Obtención de resultados}: obtener a través de la implementación del experimento los resultados del mismo. Se pueden visualizar los datos con tablas y gráficos que sean adecuados para el estudio.}
-	\item{\textbf{Estudio analítico de los resultados obtenidos}: comparar los resultados de cada método con el método de referencia \textit{baseline} y con el método del estado del arte, así como entre ellos, a fin de descubrir qué algoritmo se comporta mejor para cada caso, tanto entre grupos formados de distinta forma como con estrategias de agregación diferentes.}
+	\item{\textbf{Diseñar la evaluación de los modelos}: se debe decidir qué métrica de evaluación se va a utilizar, e implementar un algoritmo \textit{baseline} que sirva como punto de referencia base.} 
+	\item{\textbf{Obtener los resultados del experimento}: obtener a través de la implementación del experimento los resultados del mismo. Se pueden visualizar los datos con tablas y gráficos que sean adecuados para el estudio.}
+	\item{\textbf{Realizar un análisis de los resultados obtenidos}: comparar los resultados de cada método con el método de referencia \textit{baseline} y con el método del estado del arte, así como entre ellos, a fin de descubrir qué algoritmo se comporta mejor para cada caso, tanto entre grupos formados de distinta forma como con estrategias de agregación diferentes.}
 	\item{\textbf{Extraer conclusiones del estudio realizado}: dar una visión analítica de la eficacia de las propuestas ideadas para el estudio, apoyándose en los resultados obtenidos con respecto a los algoritmos de referencia, y justificar cuáles de ellas son más prometedoras.}
-	\item{\textbf{Trabajos futuros a realizar}: valorar en qué aspectos se puede seguir progresando en los métodos propuestos en el estudio, así como proponer nuevas tareas o retos dentro de este ámbito de investigación que no se hayan abarcado en el proceso del mismo.}
+	\item{\textbf{Considerar trabajos futuros a realizar}: valorar en qué aspectos se puede seguir progresando en los métodos propuestos en el estudio, así como proponer nuevas tareas o retos dentro de este ámbito de investigación que no se hayan abarcado en el proceso del mismo.}
 \end{enumerate}
 
-Con los requisitos planteados, la planificación del trabajo debe ocupar los pasos que se han definido y estimar un tiempo con el que se podría solventar cada requisito. Además, debe describir todo el material e infraestructura necesarios y, junto al tiempo estimado, dar una idea del presupuesto que requiere realizar este estudio.
+Con las diferentes etapas planteados, la planificación del trabajo debe ocupar los pasos que se han definido y estimar un tiempo con el que se podría solventar cada una. Además, debe describir todo el material e infraestructura necesarios y, junto al tiempo estimado, dar una idea del presupuesto que requiere realizar este estudio.
 
 \section{Planificación del trabajo}
 
@@ -28,7 +32,7 @@ Este apartado está subdividido en estimación de costes y estimación de tiempo
 
 \subsection{Estimación de coste de materiales e infraestructura}
 
-En primer lugar se tendrá en cuenta el ordenador con la que se ha desarrollado este estudio. Se trata de un ordenador portátil de la marca MSI, del año 2019, y que cuenta con un procesador i7-8750H capaz de llegar a 4.1GHz, así como con 16GB de memoria RAM DDR4-2666, una gráfica GeForce GTX 1060 6GB GDDR5 y dos SSD de 512GB cada uno, uno de los cuales tiene un SO Windows y el otro un SO Linux. Con este equipo se han realizado todas las tareas del experimento: documentación, revisión de la literatura y redacción de la memoria, labores de desarrollo e implementación de los algoritmos y ejecución del experimento para obtención de resultados.
+En primer lugar se tendrá en cuenta el ordenador con la que se ha desarrollado este estudio. Se trata de un ordenador portátil de la marca MSI, del año 2019, y que cuenta con un procesador i7-8750H capaz de llegar a 4.1GHz, así como con 16GB de memoria RAM DDR4-2666, una gráfica GeForce GTX 1060 6GB GDDR5 y dos SSD de 512GB cada uno, uno de los cuales tiene un SO Windows y el otro un SO Linux. Con este equipo se han realizado todas las tareas de investigación, implementación y evaluación: documentación, revisión de la literatura y redacción de la memoria, labores de desarrollo e implementación de los algoritmos y ejecución del experimento para obtención de resultados.
 
 Para obtener la información y documentación requerida para el trabajo ha sido necesaria una red de internet de banda ancha, disponible tanto en el lugar de desarrollo del trabajo como en las instalaciones de la Universidad de Granada cuando ha sido necesario. Gracias a los convenios que la Universidad establece con algunas bases de datos documentales como Scopus \cite{scopus-website} ha sido posible acceder a multitud de \textit{papers} y publicaciones sobre el tema a investigar. Además ha sido de mucha utilidad la página ResearchGate \cite{research-gate-website} para acceder a otros papers no encontrados en Scopus.
 
@@ -36,7 +40,7 @@ El desarrollo del trabajo ha sido realizado completamente sobre el sistema opera
 
 De todo este material expuesto en los párrafos anteriores, el trabajo sólo ha requerido comprar el ordenador portátil personal y la red de banda ancha disponible en el lugar de desarrollo del mismo, dado que se trata de recursos personales. El resto de la infraestructura y materiales o bien han sido productos de software libre o han sido aportados por la Universidad de Granada.
 
-\subsection{Distribución de tiempo entre tareas}
+\subsection{Distribución temporal de las tareas}
 
 Organizar la carga de trabajo en las distintas fases del estudio es una labor que debe plantearse previo a la realización del mismo. Con el planteamiento correctamente definido se pueden decidir algunas fechas de entrega y acotar los tiempos que se le asignan a cada tarea. Gracias a ello, el progreso del proyecto puede seguir el curso planificado, es más sencillo modularizar las tareas y así finalizar en el tiempo estimado.
 
@@ -57,3 +61,12 @@ Finalmente, extraer conclusiones de los resultados puede ser más sencillo si se
 En resumen, este trabajo de investigación puede enmarcarse en el tiempo en unos 4 meses, aunque naturalmente esa estimación puede variar en función del tiempo que se le pueda dedicar diariamente al proyecto, especialmente si se compagina con un trabajo a jornada completa. Es de importancia recordar que el tiempo invertido en el experimento también tiene un coste, igual que el de los materiales e infraestructura; en esencia se trata de otro recurso. Partiendo de la base de que este estudio es un trabajo de investigación en un campo puntero tecnológicamente, podría estimarse el coste total del trabajo como una media entre el sueldo a jornada completa de un ingeniero informático junior y el de un investigador de un departamento de universidad durante el transcurso del mismo.
 
 Estimando para una profesión de estas características un valor aproximado de 12 euros/hora, a 4 meses trabajando (20 días al mes) y dedicándole una media de 4h diarias, se estipularía el presupuesto del proyecto en 2880 euros.
+
+A continuación se ilustra el proceso con un cronograma generado gracias a la plataforma libre \textit{draw.io} \cite{draw.io}:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.6]{imagenes/cronograma.pdf}
+	\caption{Cronograma ilustrativo de la planificación del estudio.}
+	\label{cronograma}
+\end{figure}
